@@ -5,7 +5,7 @@ steps:
 # Step 1: Upload dynamic pipeline
 - label: "Upload Pipeline"
   command: sleep 120 && echo "checking the aws autoscale"
-  key: Dependency Step
+  key: Dependency_Step
 
 # Placeholder step to simulate dependencies
 - label: "Dependent Step check"
@@ -18,5 +18,5 @@ steps:
         agents:
           queue: "AWS-queue"  # Specific queue for the parallel jobs
         depends_on:
-          - "Dependency Step"  # These jobs wait for the Dependency Step
+          - "Dependency_Step"  # These jobs wait for the Dependency Step
     EOF
