@@ -4,7 +4,7 @@ agents:
 steps:
 # Step 1: Upload dynamic pipeline
 - label: "Upload Pipeline"
-  command: sleep 120 && echo "checking the aws autoscale"
+  command: sleep 240 && echo "checking the aws autoscale"
   key: Dependency_Step
 
 # Placeholder step to simulate dependencies
