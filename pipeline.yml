@@ -13,7 +13,7 @@ steps:
     cat << EOF | buildkite-agent pipeline upload
     steps:
       - label: "Parallel Step"
-        command: "./parallel-task.sh"
+        command: echo "hi hi hi"
         parallelism: 10  # 10 parallel jobs
         agents:
           queue: "AWS-queue"  # Specific queue for the parallel jobs
