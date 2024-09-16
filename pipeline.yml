@@ -1,22 +1,51 @@
 agents:
   queue: "AWS-queue"
 
-steps:
-# Step 1: Upload dynamic pipeline
-- label: "Upload Pipeline"
-  command: sleep 240 && echo "checking the aws autoscale"
-  key: Dependency_Step
+# steps:
+# # Step 1: Upload dynamic pipeline
+# - label: "Upload Pipeline"
+#   command: sleep 240 && echo "checking the aws autoscale"
+#   key: Dependency_Step
 
-# Placeholder step to simulate dependencies
-- label: "Dependent Step check"
-  command: |
-    cat << EOF | buildkite-agent pipeline upload
-    steps:
-      - label: "Parallel Step"
-        command: echo "hi hi hi"
-        parallelism: 10  # 10 parallel jobs
-        agents:
-          queue: "AWS-queue"  # Specific queue for the parallel jobs
-        depends_on:
-          - "Dependency_Step"  # These jobs wait for the Dependency Step
-    EOF
+# # Placeholder step to simulate dependencies
+# - label: "Dependent Step check"
+#   command: |
+#     cat << EOF | buildkite-agent pipeline upload
+#     steps:
+#       - label: "Parallel Step"
+#         command: echo "hi hi hi"
+#         parallelism: 3  # 10 parallel jobs
+#         agents:
+#           queue: "AWS-queue"  # Specific queue for the parallel jobs
+#         depends_on:
+#           - "Dependency_Step"  # These jobs wait for the Dependency Step
+#     EOF
+
+
+# - label: "Dependent Step check"
+#   command: |
+#     cat << EOF | buildkite-agent pipeline upload
+#     steps:
+#       - label: "Parallel Step"
+#         command: echo "hi hi hi"
+#         parallelism: 3  # 10 parallel jobs
+#         agents:
+#           queue: "AWS-queue"  # Specific queue for the parallel jobs
+#         depends_on:
+#           - "Dependency_Step"  # These jobs wait for the Dependency Step
+#     EOF
+
+steps:
+- group: "Setup Group"
+  steps:
+  - label: "Step 1: Install Dependencies"
+    command: "echo 'Installing dependencies...'"
+  - label: "Step 2: Run Setup Script"
+    command: "echo 'Running setup script...'"
+
+- group: "Test Group"
+  steps:
+  - label: "Step 3: Unit Tests"
+    command: "echo 'Running unit tests...' && sleep 10"
+  - label: "Step 4: Integration Tests"
+    command: "echo 'Running integration tests...' && sleep 10"
