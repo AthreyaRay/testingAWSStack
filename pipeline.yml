@@ -48,4 +48,4 @@ steps:
   - label: "Step 3: Unit Tests"
     command: "echo 'Running unit tests...' && sleep 10"
   - label: "Step 4: Integration Tests"
-    command: "echo 'Running integration tests...' && sleep 08"
+    command: "echo 'Running integration tests...' && sleep 10"
