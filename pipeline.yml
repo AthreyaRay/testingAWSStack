@@ -48,5 +48,7 @@ steps:
   - label: "Step 3: Unit Tests"
     command: "echo 'Running unit tests...' && sleep 10"
   - label: "Step 4: Integration Tests"
-    command: echo "This is the annotation body" | buildkite-agent annotate --style "info" --context "my-annotation"
+    command: |
+      - echo "This is the annotation body" | buildkite-agent annotate --style "info" --context "my-annotation"
+      - buildkite-agent annotate --style "warning" --context "file-annotation" < annotation.txt
 
