@@ -1,5 +1,5 @@
-agents:
-  queue: "AWS-queue"
+# agents:
+#   queue: "AWS-queue"
 
 # steps:
 # # Step 1: Upload dynamic pipeline
