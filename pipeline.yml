@@ -42,6 +42,16 @@ steps:
     command: "echo 'Installing dependencies...'"
   - label: "Step 2: Run Setup Script"
     command: "echo 'Running setup script...'"
+  - label: "step 3: this needs to fail and pass on retry :danger:"
+    command: |
+      if [ "$BUILDKITE_RETRY_COUNT" -eq 0 ]; then
+        echo "Failing initially"
+        exit 1
+      else
+        echo "Passing on retry"
+        exit 0
+      fi
+
 
 - group: "Test Group"
   steps:
