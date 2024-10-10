@@ -51,6 +51,8 @@ steps:
         echo "Passing on retry"
         exit 0
       fi
+    retry:
+      automatic: true
 
 
 - group: "Test Group"
