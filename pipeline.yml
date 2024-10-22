@@ -37,27 +37,35 @@
 
 steps:
 - group: "Setup Group"
+  key: "shopify"
   steps:
   - label: "Step 1: Install Dependencies"
     command: "echo 'Installing dependencies...'"
+
   - label: "Step 2: Run Setup Script"
     command: "echo 'Running setup script...'"
-  - label: "step 3: this needs to fail and pass on retry :danger:"
+
+  - label: "Step 3: This needs to fail and pass on retry :danger:"
     command: |
-      if [ "$$BUILDKITE_RETRY_COUNT" -eq 0 ]; then
-        echo "Failing initially"
-        exit 1
+      if [ "$BUILDKITE_RETRY_COUNT" == "0" ]; then
+        echo "Intentional failure"; exit 1
       else
-        echo "Passing on retry"
-        exit 0
+        echo "Retrying and passing..."
       fi
-    retry:
-      automatic: true
 
+- label: 'Step 5: Update GitHub Status'
+  command: |
+    outcome=$(buildkite-agent step get "state" --step "shopify")
+    if [ "$outcome" != "hard_failed" ]; then
+      echo "Updating GitHub status for parent pipeline with commit hash: $PARENT_COMMIT_HASH"
+      curl -X POST \
+        -H "Authorization: token $(buildkite-agent secret get GHPAT_TOKEN)" \
+        -d '{"state": "success", "target_url": "https://buildkite.com/AthreyaRay/testingAWSStack", "description": "Group steps completed", "context": "ci/buildkite"}' \
+        https://api.github.com/repos/AthreyaRay/testingAWSStack/statuses/$PARENT_COMMIT_HASH
+    else
+      echo "Group steps failed, skipping GitHub status update."
+    fi
 
-- group: "Test Group"
-  steps:
-  - label: "Step 3: Unit Tests"
-    command: "echo 'Running unit tests...' && sleep 10"
-  - label: "Step 4: Integration Tests"
-    command: buildkite-agent annotate --style "warning" --context "file-annotation" < ./annotation.txt
+- label: 'Step 5: Update GitHub Status'
+  command: sleep 300
+
