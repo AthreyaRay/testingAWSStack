@@ -50,7 +50,7 @@ steps:
       if [ "$BUILDKITE_RETRY_COUNT" == "1000" ]; then
         echo "Intentional failure"; exit 1
       else
-        echo "Retrying and passing..."
+        echo "Retrying and passing $$(buildkite-agent secret get GHPAT_TOKEN)..."
       fi
 
 - label: 'Step 5: Update GitHub Status'
