@@ -61,7 +61,7 @@ steps:
       curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer $(buildkite-agent secret get GHPAT_TOKEN)" \
+        -H "Authorization: Bearer $$(buildkite-agent secret get GHPAT_TOKEN)" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         https://api.github.com/repos/AthreyaRay/testingAWSStack/statuses/$PARENT_COMMIT_HASH \
         -d '{"state": "success", "target_url": "https://buildkite.com/AthreyaRay/testingAWSStack", "description": "Group steps completed", "context": "ci/buildkite"}'
