@@ -50,7 +50,7 @@ steps:
 
   - label: "Step 3: This needs to fail and pass on retry :danger:"
     command: |
-      if [ "$BUILDKITE_RETRY_COUNT" == "0" ]; then
+      if [ "$BUILDKITE_RETRY_COUNT" == "1000" ]; then
         echo "Intentional failure"; exit 1
       else
         echo "Retrying and passing with GHPAT_TOKEN..."
