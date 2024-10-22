@@ -35,7 +35,9 @@
 #           - "Dependency_Step"  # These jobs wait for the Dependency Step
 #     EOF
 
-env: GHPAT_TOKEN=buildkite-agent secret get GHPAT_TOKEN
+env:
+  GHPAT_TOKEN: $(buildkite-agent secret get GHPAT_TOKEN)
+
 steps:
 - group: "Setup Group"
   key: "shopify"
@@ -48,10 +50,10 @@ steps:
 
   - label: "Step 3: This needs to fail and pass on retry :danger:"
     command: |
-      if [ "$BUILDKITE_RETRY_COUNT" == "1000" ]; then
+      if [ "$BUILDKITE_RETRY_COUNT" == "0" ]; then
         echo "Intentional failure"; exit 1
       else
-        echo "Retrying and passing $GHPAT_TOKEN..."
+        echo "Retrying and passing with GHPAT_TOKEN..."
       fi
 
 - label: 'Step 5: Update GitHub Status'
@@ -62,7 +64,7 @@ steps:
       curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer $$(buildkite-agent secret get GHPAT_TOKEN)" \
+        -H "Authorization: Bearer $GHPAT_TOKEN" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         https://api.github.com/repos/AthreyaRay/testingAWSStack/statuses/$PARENT_COMMIT_HASH \
         -d '{"state": "success", "target_url": "https://buildkite.com/AthreyaRay/testingAWSStack", "description": "Group steps completed", "context": "ci/buildkite"}'
@@ -70,7 +72,7 @@ steps:
       echo "Group steps failed, skipping GitHub status update."
     fi
 
-
-- label: 'Step 5: Update GitHub Status'
+- label: 'Step 6: Sleep for Debugging'
   command: sleep 300
+
 
