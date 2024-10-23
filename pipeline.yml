@@ -72,11 +72,11 @@ steps:
       echo "Group steps failed, skipping GitHub status update."
     fi
 
-- block: "Manual approval before sleep step"
-  prompt: "Do you want to proceed with the sleep step?"
+# - block: "Manual approval before sleep step"
+#   prompt: "Do you want to proceed with the sleep step?"
 
 - label: 'Step 6: Sleep for Debugging'
-  command: sleep 300
+  command: sleep 10
 
 
 
