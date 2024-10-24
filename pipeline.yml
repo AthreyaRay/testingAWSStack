@@ -76,7 +76,7 @@ steps:
 #   prompt: "Do you want to proceed with the sleep step?"
 
 - label: 'Step 6: Sleep for Debugging'
-  command: sleep 100 & exit 1
+  command: sleep 100 && exit 1
 
 
 
