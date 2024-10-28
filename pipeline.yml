@@ -84,7 +84,8 @@ steps:
 - group: ":lock_with_ink_pen: Security Audits"
   key: "audits"
   notify:
-  - webhook: "https://webhook.site/e0b68de6-e3df-4582-abfb-401a21867a25"
+  - github_commit_status:
+      context: "group_steps"
   steps:
   - label: ":brakeman: Brakeman"
     command: echo ".buildkite/steps/brakeman"
