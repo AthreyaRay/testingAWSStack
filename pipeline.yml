@@ -85,7 +85,7 @@ steps:
   key: "audits"
   notify:
   - github_commit_status:
-      context: "group_steps"
+      context: "group_steps_Demo_Duration"
   steps:
   - label: ":brakeman: Brakeman"
     command: echo ".buildkite/steps/brakeman"
