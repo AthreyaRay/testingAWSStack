@@ -40,8 +40,6 @@
 
 steps:
 - group: "Setup Group"
-  notify:
-  - webhook: "https://webhook.site/e0b68de6-e3df-4582-abfb-401a21867a25"
   key: "shopify"
   steps:
   - label: "Step 1: Install Dependencies"
@@ -49,6 +47,8 @@ steps:
 
   - label: "Step 2: Run Setup Script"
     command: "echo 'Running setup script...'"
+  notify:
+  - webhook: "https://webhook.site/e0b68de6-e3df-4582-abfb-401a21867a25"
 
   # - label: "Step 3: This needs to fail and pass on retry :danger:"
   #   command: |
