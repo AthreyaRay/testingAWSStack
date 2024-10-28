@@ -1,84 +1,98 @@
-# agents:
-#   queue: "AWS-queue"
+# # agents:
+# #   queue: "AWS-queue"
+
+# # steps:
+# # # Step 1: Upload dynamic pipeline
+# # - label: "Upload Pipeline"
+# #   command: sleep 240 && echo "checking the aws autoscale"
+# #   key: Dependency_Step
+
+# # # Placeholder step to simulate dependencies
+# # - label: "Dependent Step check"
+# #   command: |
+# #     cat << EOF | buildkite-agent pipeline upload
+# #     steps:
+# #       - label: "Parallel Step"
+# #         command: echo "hi hi hi"
+# #         parallelism: 3  # 10 parallel jobs
+# #         agents:
+# #           queue: "AWS-queue"  # Specific queue for the parallel jobs
+# #         depends_on:
+# #           - "Dependency_Step"  # These jobs wait for the Dependency Step
+# #     EOF
+
+
+# # - label: "Dependent Step check"
+# #   command: |
+# #     cat << EOF | buildkite-agent pipeline upload
+# #     steps:
+# #       - label: "Parallel Step"
+# #         command: echo "hi hi hi"
+# #         parallelism: 3  # 10 parallel jobs
+# #         agents:
+# #           queue: "AWS-queue"  # Specific queue for the parallel jobs
+# #         depends_on:
+# #           - "Dependency_Step"  # These jobs wait for the Dependency Step
+# #     EOF
+
+# # env:
+# #   GHPAT_TOKEN: $(buildkite-agent secret get GHPAT_TOKEN)
 
 # steps:
-# # Step 1: Upload dynamic pipeline
-# - label: "Upload Pipeline"
-#   command: sleep 240 && echo "checking the aws autoscale"
-#   key: Dependency_Step
+# - group: "Setup Group"
+#   key: "shopify"
+#   steps:
+#   - label: "Step 1: Install Dependencies"
+#     command: "echo 'Installing dependencies...'"
 
-# # Placeholder step to simulate dependencies
-# - label: "Dependent Step check"
-#   command: |
-#     cat << EOF | buildkite-agent pipeline upload
-#     steps:
-#       - label: "Parallel Step"
-#         command: echo "hi hi hi"
-#         parallelism: 3  # 10 parallel jobs
-#         agents:
-#           queue: "AWS-queue"  # Specific queue for the parallel jobs
-#         depends_on:
-#           - "Dependency_Step"  # These jobs wait for the Dependency Step
-#     EOF
+#   - label: "Step 2: Run Setup Script"
+#     command: "echo 'Running setup script...'"
+#   notify:
+#   - webhook: "https://webhook.site/e0b68de6-e3df-4582-abfb-401a21867a25"
 
+#   # - label: "Step 3: This needs to fail and pass on retry :danger:"
+#   #   command: |
+#   #     if [ "$BUILDKITE_RETRY_COUNT" == "1000" ]; then
+#   #       echo "Intentional failure"; exit 1
+#   #     else
+#   #       echo "Retrying and passing with GHPAT_TOKEN..."
+#   #     fi
 
-# - label: "Dependent Step check"
-#   command: |
-#     cat << EOF | buildkite-agent pipeline upload
-#     steps:
-#       - label: "Parallel Step"
-#         command: echo "hi hi hi"
-#         parallelism: 3  # 10 parallel jobs
-#         agents:
-#           queue: "AWS-queue"  # Specific queue for the parallel jobs
-#         depends_on:
-#           - "Dependency_Step"  # These jobs wait for the Dependency Step
-#     EOF
+# # - label: 'Step 5: Update GitHub Status'
+# #   command: |
+# #     outcome=$(buildkite-agent step get "state" --step "shopify")
+# #     if [ "$outcome" != "hard_failed" ]; then
+# #       echo "Updating GitHub status for parent pipeline with commit hash: $PARENT_COMMIT_HASH"
+# #       curl -L \
+# #         -X POST \
+# #         -H "Accept: application/vnd.github+json" \
+# #         -H "Authorization: Bearer $GHPAT_TOKEN" \
+# #         -H "X-GitHub-Api-Version: 2022-11-28" \
+# #         https://api.github.com/repos/AthreyaRay/testingAWSStack/statuses/$BUILDKITE_COMMIT \
+# #         -d '{"state": "success", "target_url": "https://buildkite.com/AthreyaRay/testingAWSStack", "description": "Group steps completed", "context": "github/athreya-test1"}'
+# #     else
+# #       echo "Group steps failed, skipping GitHub status update."
+# #     fi
 
-# env:
-#   GHPAT_TOKEN: $(buildkite-agent secret get GHPAT_TOKEN)
+# # - block: "Manual approval before sleep step"
+# #   prompt: "Do you want to proceed with the sleep step?"
+
+# - label: 'Step 6: Sleep for Debugging'
+#   command: sleep 12 && exit 0
 
 steps:
-- group: "Setup Group"
-  key: "shopify"
-  steps:
-  - label: "Step 1: Install Dependencies"
-    command: "echo 'Installing dependencies...'"
-
-  - label: "Step 2: Run Setup Script"
-    command: "echo 'Running setup script...'"
+- group: ":lock_with_ink_pen: Security Audits"
+  key: "audits"
   notify:
   - webhook: "https://webhook.site/e0b68de6-e3df-4582-abfb-401a21867a25"
-
-  # - label: "Step 3: This needs to fail and pass on retry :danger:"
-  #   command: |
-  #     if [ "$BUILDKITE_RETRY_COUNT" == "1000" ]; then
-  #       echo "Intentional failure"; exit 1
-  #     else
-  #       echo "Retrying and passing with GHPAT_TOKEN..."
-  #     fi
-
-# - label: 'Step 5: Update GitHub Status'
-#   command: |
-#     outcome=$(buildkite-agent step get "state" --step "shopify")
-#     if [ "$outcome" != "hard_failed" ]; then
-#       echo "Updating GitHub status for parent pipeline with commit hash: $PARENT_COMMIT_HASH"
-#       curl -L \
-#         -X POST \
-#         -H "Accept: application/vnd.github+json" \
-#         -H "Authorization: Bearer $GHPAT_TOKEN" \
-#         -H "X-GitHub-Api-Version: 2022-11-28" \
-#         https://api.github.com/repos/AthreyaRay/testingAWSStack/statuses/$BUILDKITE_COMMIT \
-#         -d '{"state": "success", "target_url": "https://buildkite.com/AthreyaRay/testingAWSStack", "description": "Group steps completed", "context": "github/athreya-test1"}'
-#     else
-#       echo "Group steps failed, skipping GitHub status update."
-#     fi
-
-# - block: "Manual approval before sleep step"
-#   prompt: "Do you want to proceed with the sleep step?"
-
-- label: 'Step 6: Sleep for Debugging'
-  command: sleep 12 && exit 0
-
+  steps:
+  - label: ":brakeman: Brakeman"
+    command: echo ".buildkite/steps/brakeman"
+  - label: ":bundleaudit: Bundle Audit"
+    command: echo ".buildkite/steps/bundleaudit"
+  - label: ":yarn: Yarn Audit"
+    command: echo ".buildkite/steps/yarn"
+  - label: ":yarn: Outdated Check"
+    command: echo ".buildkite/steps/outdated"
 
 
