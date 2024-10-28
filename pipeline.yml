@@ -35,8 +35,8 @@
 #           - "Dependency_Step"  # These jobs wait for the Dependency Step
 #     EOF
 
-env:
-  GHPAT_TOKEN: $(buildkite-agent secret get GHPAT_TOKEN)
+# env:
+#   GHPAT_TOKEN: $(buildkite-agent secret get GHPAT_TOKEN)
 
 steps:
 - group: "Setup Group"
