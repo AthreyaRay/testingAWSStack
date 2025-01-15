@@ -21,7 +21,6 @@
 # #           - "Dependency_Step"  # These jobs wait for the Dependency Step
 # #     EOF
 
-
 # # - label: "Dependent Step check"
 # #   command: |
 # #     cat << EOF | buildkite-agent pipeline upload
@@ -80,20 +79,29 @@
 # - label: 'Step 6: Sleep for Debugging'
 #   command: sleep 12 && exit 0
 
+# steps:
+# - group: ":lock_with_ink_pen: Security Audits"
+#   key: "audits"
+#   notify:
+#   - github_commit_status:
+#       context: "group_steps_Demo_Duration"
+#   steps:
+#   - label: ":brakeman: Brakeman"
+#     command: echo ".buildkite/steps/brakeman"
+#   - label: ":bundleaudit: Bundle Audit"
+#     command: echo ".buildkite/steps/bundleaudit"
+#   - label: ":yarn: Yarn Audit"
+#     command: echo ".buildkite/steps/yarn"
+#   - label: ":yarn: Outdated Check"
+#     command: echo ".buildkite/steps/outdated"
+
+# notify:
+#   - webhook
+
 steps:
-- group: ":lock_with_ink_pen: Security Audits"
-  key: "audits"
+- label: "Slack mention"
+  command: echo "Sending a notification with a mention"
   notify:
-  - github_commit_status:
-      context: "group_steps_Demo_Duration"
-  steps:
-  - label: ":brakeman: Brakeman"
-    command: echo ".buildkite/steps/brakeman"
-  - label: ":bundleaudit: Bundle Audit"
-    command: echo ".buildkite/steps/bundleaudit"
-  - label: ":yarn: Yarn Audit"
-    command: echo ".buildkite/steps/yarn"
-  - label: ":yarn: Outdated Check"
-    command: echo ".buildkite/steps/outdated"
-
-
+  - slack:
+      channels: "@U06N1SLM5J4"
+      message: "This message will ping the group with ID SAZ94GDB8"
